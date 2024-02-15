@@ -6,7 +6,7 @@
 
 import socket
 
-def connect_serv(server:str, port:int) -> socket.socket:
+def create_socket(server:str, port:int) -> socket.socket:
     try:
         sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sockt.connect((server, port))
