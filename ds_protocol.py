@@ -14,15 +14,8 @@ class DSPServerError(Exception):
 # Namedtuple to hold the values retrieved from json messages.
 # TODO: update this named tuple to use DSP protocol keys
 
-DSPConnection = namedtuple('DSPConnection', ['socket','send', 'recv'])
+ServerMessage = namedtuple('ServerMessage', ['type', 'message', 'token'])
 
-def init(sock:socket) -> DSPConnection:
-    try: 
-        f_send = sock.makefile('wb')
-        f_recv = sock.makefile('rb')
-    except: 
-        raise DSPServerError('Socket connection error')
-    return DSPConnection(socket = sock, send = f_send, recv = f_recv)
 
 def extract_json(json_msg:str) -> DSPConnection:
   '''
@@ -30,14 +23,18 @@ def extract_json(json_msg:str) -> DSPConnection:
   
   TODO: replace the pseudo placeholder keys with actual DSP protocol keys
   '''
-  try:
-    json_obj = json.loads(json_msg)
+    try:
+        json_obj = json.loads(json_msg)
 
-    foo = json_obj['foo']
-    baz = json_obj['bar']['baz']
-  except json.JSONDecodeError:
+        cmd = json_obj['response']['type']
+        msg = ""
+        tkn = ""
+        if cmd == 'error':
+            msg = json_obj['response']['message']
+        elif cmd == 'ok':
+            token = json_obj['response']['token']
+    except json.JSONDecodeError:
     print("Json cannot be decoded.")
 
-  return DataTuple(foo, baz)
+    return ServerMessage(cmd, msg, tkn) 
 
-def to_json(DSP_obj:DSPConnection) -> bytes
