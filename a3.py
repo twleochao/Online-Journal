@@ -14,6 +14,8 @@ from ds_protocol import init
 main():
     sock = create_socket(HOST, PORT)
     connection = init(sock)
+    while True:
+
 
 
     
