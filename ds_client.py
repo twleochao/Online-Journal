@@ -26,7 +26,13 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     :param message: The message to be sent to the server.
     :param bio: Optional, a bio for the user.
     '''
-    client = connect_serv(server, port)
+    client = create_socket(server, port)
+    if client == None:
+        return
+
+    send = client.makefile('wb')
+    #parse to json?
+    send.write(#jsonfile)
 
 
 

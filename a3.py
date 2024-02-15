@@ -12,9 +12,9 @@ from ds_client import create_socket
 from ds_protocol import init
 
 main():
-    sock = create_socket(HOST, PORT)
-    connection = init(sock)
-    while True:
+    send(HOST, PORT, name, pwd, msg)
+
+    #change later this is for testing
 
 
 
