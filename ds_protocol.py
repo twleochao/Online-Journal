@@ -34,7 +34,7 @@ def extract_json(json_msg:str) -> DSPConnection:
         elif cmd == 'ok':
             token = json_obj['response']['token']
     except json.JSONDecodeError:
-    print("Json cannot be decoded.")
+        print("Json cannot be decoded.")
 
     return ServerMessage(cmd, msg, tkn) 
 

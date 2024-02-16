@@ -8,17 +8,13 @@ HOST = "168.235.86.101"
 PORT = 3021
 
 import socket
-from ds_client import create_socket 
-from ds_protocol import init
+from ds_client import send 
 
-main():
+def main():
+    name = 'HARHARHAHR'
+    pwd = '123456789'
+    msg = 'testing fhdjskfdhs '
     send(HOST, PORT, name, pwd, msg)
-
-    #change later this is for testing
-
-
-
-    
 
 if __name__ == "__main__":
     main()
