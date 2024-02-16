@@ -15,9 +15,6 @@ def create_socket(server:str, port:int) -> socket.socket:
     except:
         return None
 
-def get_time():
-    return time.time()
-
 
 def send(server:str, port:int, username:str, password:str, message:str, bio:str=None) -> bool:
     '''
@@ -36,13 +33,28 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
     try:
         send = client.makefile('wb')
+        msg = {"join": {"username": username, "password": password, "token": ""}}
+        print(msg)
         #parse to json?
-        send.write(#jsonfile)
+        send.write(msg + '\r\n')
         send.flush
+        response = receive(server, port)
+        print response
         return True
     except ValueError:
         return False
 
+def receive(server:str, port:int):
+    client = create_socket(server, port)
+    if client == None:
+        return None
+
+    try: 
+        recv = client.makefile('rb')
+        srv_response = recv.readline()
+        return srv_response
+    except:
+        Print('Error occured')
 
 
 #TODO: return either True or False depending on results of required operation
