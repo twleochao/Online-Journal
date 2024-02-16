@@ -12,11 +12,7 @@ from collections import namedtuple
 class DSPServerError(Exception):
     pass
 
-# Namedtuple to hold the values retrieved from json messages.
-# TODO: update this named tuple to use DSP protocol keys
-
 ServerMessage = namedtuple('ServerMessage', ['type', 'message', 'token'])
-
 
 def extract_json(json_msg:str) -> ServerMessage:
     '''
@@ -44,8 +40,6 @@ def to_json(cmd: str, username:str, password:str, message:str, bio:str=None, tok
     elif cmd == 'post':
         DSPcmd = {'token': token, 'post': {'entry': message, 'timestamp': time.time()}}
     return DSPcmd
-
-
 
 def get_send_msg(DSPcmd):
     msg = json.dumps(DSPcmd)
