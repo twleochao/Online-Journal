@@ -6,6 +6,7 @@
 
 import json
 import socket
+import time
 from collections import namedtuple
 
 class DSPServerError(Exception):
@@ -38,10 +39,16 @@ def extract_json(json_msg:str) -> DSPConnection:
 
     return ServerMessage(cmd, msg, tkn) 
 
-def to_json(cmd: str, username:str, password:str, message:str, bio:str=None): 
+def to_json(cmd: str, username:str, password:str, message:str, bio:str=None, token:str=None): 
     DSPcmd = None 
     if cmd == 'join':
         DSPcmd = {"join": {"username": username, "password": password, "token": ""}}
+    elif cmd == 'bio':
+        DSPcmd = {'token': token, 'bio': {'entry': bio, 'timestamp': time.time()}}
+    elif cmd == 'post':
+        DSPcmd = {'token': token, 'post': {'entry': message, 'timestamp': time.time()}}
+    else:
+        return DSPcmd
 
 
 
