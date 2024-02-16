@@ -5,7 +5,7 @@
 # 76846188
 
 import socket
-from ds_protocol import to_json, get_send_msg
+from ds_protocol import to_json, get_send_msg, extract_json
 import json
 
 def create_socket(server:str, port:int) -> socket.socket:
@@ -36,10 +36,25 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
         send = client.makefile('wb')
         DSPcmd = to_json('join', username, password, message, bio)
         msg = get_send_msg(DSPcmd)
-        send.write(msg + b'\r\n')
-        send.flush()
+        write_command(send, msg)
+
         response = receive(client)
+        serv_msg = extract_json(response)
+        print(serv_msg)
         print(response)
+        print(serv_msg.type)
+
+        if serv_msg.type == 'error':
+            return False
+        else:
+            DSPcmd = to_json('post', username, password, message, bio, serv_msg.token)
+            msg = get_send_msg(DSPcmd)
+            write_command(send, msg)
+            response = receive(client)
+            print(msg)
+            print(response)
+
+
         return True
     except ValueError:
         return False
@@ -52,5 +67,8 @@ def receive(client:socket.socket):
     except TypeError:
         print('Error occured')
 
+def write_command(send, msg):
+    send.write(msg + b'\r\n')
+    send.flush()
 
 #TODO: return either True or False depending on results of required operation

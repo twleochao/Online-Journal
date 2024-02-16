@@ -18,22 +18,18 @@ class DSPServerError(Exception):
 ServerMessage = namedtuple('ServerMessage', ['type', 'message', 'token'])
 
 
-def extract_json(json_msg:str) -> DSPConnection:
-  '''
-  Call the json.loads function on a json string and convert it to a DSPConnection object
-  
-  TODO: replace the pseudo placeholder keys with actual DSP protocol keys
-  '''
+def extract_json(json_msg:str) -> ServerMessage:
+    '''
+    Call the json.loads function on a json string and convert it to a DSPConnection object
+
+    TODO: replace the pseudo placeholder keys with actual DSP protocol keys
+    '''
     try:
         json_obj = json.loads(json_msg)
 
         cmd = json_obj['response']['type']
-        msg = ""
-        tkn = ""
-        if cmd == 'error':
-            msg = json_obj['response']['message']
-        elif cmd == 'ok':
-            token = json_obj['response']['token']
+        msg = json_obj['response']['message']
+        tkn = json_obj['response']['token'] 
     except json.JSONDecodeError:
         print("Json cannot be decoded.")
 
@@ -47,8 +43,7 @@ def to_json(cmd: str, username:str, password:str, message:str, bio:str=None, tok
         DSPcmd = {'token': token, 'bio': {'entry': bio, 'timestamp': time.time()}}
     elif cmd == 'post':
         DSPcmd = {'token': token, 'post': {'entry': message, 'timestamp': time.time()}}
-    else:
-        return DSPcmd
+    return DSPcmd
 
 
 

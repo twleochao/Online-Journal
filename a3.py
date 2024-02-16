@@ -11,9 +11,9 @@ import socket
 from ds_client import send 
 
 def main():
-    name = 'HARHARHAHR'
+    name = 'acbdfeuhf'
     pwd = '123456789'
-    msg = 'testing fhdjskfdhs '
+    msg = 'testing FDHSJ FHDJSK '
     send(HOST, PORT, name, pwd, msg)
 
 if __name__ == "__main__":
