@@ -6,6 +6,7 @@
 
 import socket
 import time
+from ds_protocol import to_json, get_send_msg
 import json
 
 def create_socket(server:str, port:int) -> socket.socket:
@@ -34,11 +35,10 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
     try:
         send = client.makefile('wb')
-        jsn = {"join": {"username": username, "password": password, "token": ""}}
-        msg = json.dumps(jsn)
-        #parse to json?
-        print(msg.encode())
-        send.write(msg.encode() + b'\r\n')
+        DSPcmd = to_json('join', username, password, message, bio)
+        msg = get_send_msg(DSPcmd)
+
+        send.write(msg + b'\r\n')
         send.flush()
         response = receive(client)
         print(response)

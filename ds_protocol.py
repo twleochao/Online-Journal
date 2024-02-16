@@ -38,3 +38,13 @@ def extract_json(json_msg:str) -> DSPConnection:
 
     return ServerMessage(cmd, msg, tkn) 
 
+def to_json(cmd: str, username:str, password:str, message:str, bio:str=None): 
+    DSPcmd = None 
+    if cmd == 'join':
+        DSPcmd = {"join": {"username": username, "password": password, "token": ""}}
+
+
+
+def get_send_msg(DSPcmd):
+    msg = json.dumps(DSPcmd)
+    return msg.encode()
