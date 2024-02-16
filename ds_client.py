@@ -5,6 +5,7 @@
 # 76846188
 
 import socket
+import time
 
 def create_socket(server:str, port:int) -> socket.socket:
     try:
@@ -14,8 +15,11 @@ def create_socket(server:str, port:int) -> socket.socket:
     except:
         return None
 
+def get_time():
+    return time.time()
 
-def send(server:str, port:int, username:str, password:str, message:str, bio:str=None):
+
+def send(server:str, port:int, username:str, password:str, message:str, bio:str=None) -> bool:
     '''
     The send function joins a ds server and sends a message, bio, or both
 
@@ -28,11 +32,16 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     '''
     client = create_socket(server, port)
     if client == None:
-        return
+        return False
 
-    send = client.makefile('wb')
-    #parse to json?
-    send.write(#jsonfile)
+    try:
+        send = client.makefile('wb')
+        #parse to json?
+        send.write(#jsonfile)
+        send.flush
+        return True
+    except ValueError:
+        return False
 
 
 
