@@ -6,7 +6,6 @@
 
 import socket
 from ds_protocol import to_json, get_send_msg, extract_json
-import json
 
 def create_socket(server:str, port:int) -> socket.socket:
     try:

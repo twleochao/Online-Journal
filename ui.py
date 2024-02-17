@@ -86,7 +86,7 @@ def get_user_info(name, path):
     ip = input('IP Address: (required): ')
     username = input('Username (required): ')
     password = input('Password (required): ')
-    bio = input('Biography: (optional)')
+    bio = input('Biography (optional): ')
 
     return ip, username, password, bio
 

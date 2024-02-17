@@ -7,7 +7,6 @@
 DSPHOST = "168.235.86.101"
 PORT = 3021
 
-import socket
 from ds_client import send 
 from pathlib import Path
 from ui import print_commands, read_input, get_user_info, edit_input
@@ -170,8 +169,12 @@ def post_journal(pf):
     for post in posts: 
         print(f'{posts.index(post) + 1}: {post["entry"]}')
 
-    idx = input('Enter the index of the journal you want to post')
-    send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, post[int(idx) - 1]["entry"], pf[1].bio)
+    idx = input('Enter the index of the journal you want to post: ')
+    while not isinstance(idx, int) and idx > len(posts) - 1 and idx < 1:
+        idx = input('Enter the index of the journal you want to post: ')
+
+    send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, posts[int(idx) - 1]["entry"], pf[1].bio)
+    print(f'Journal#{idx}: {posts[int(idx) - 1]} has been successfully posted!') 
 
 def main():
     print('Welcome to your Personal Journal! Press enter to begin: ', end="")
@@ -216,7 +219,7 @@ def run(lst = [], admin = None, profile_info = None):
                 profile_info = load_content(lst[1])
             elif cmd == 'E' or cmd == 'P' or cmd == 'U':
                 try: 
-                    if cmd == 'E': edit_content(profile_info, list[1:])
+                    if cmd == 'E': edit_content(profile_info, lst[1:])
                     elif cmd == 'P': print_content(profile_info, lst[1:])
                     else: post_journal(profile_info)
                 except TypeError:
