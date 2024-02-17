@@ -52,7 +52,6 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
         response = receive(client)
         serv_msg = extract_json(response)
-        print(serv_msg)
 
         if serv_msg.type == 'error':
             return False
