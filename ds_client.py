@@ -52,20 +52,27 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
         response = receive(client)
         serv_msg = extract_json(response)
+        print(serv_msg)
 
         if serv_msg.type == 'error':
             return False
-        elif bio:
+
+        if bio:
             DSPcmd = to_json('bio', username, password, message, bio, serv_msg.token)
             msg = get_send_msg(DSPcmd)
             write_command(send, msg)
-        else:
-            DSPcmd = to_json('post', username, password, message, bio, serv_msg.token)
-            msg = get_send_msg(DSPcmd)
-            write_command(send, msg)
+
+        DSPcmd = to_json('post', username, password, message, bio, serv_msg.token)
+        msg = get_send_msg(DSPcmd)
+        write_command(send, msg)
+
         return True
 
     except ValueError:
+        print('Missing information or invalid data type')
+        return False
+    except:
+        print('Error occured')
         return False
 
 #TODO: return either True or False depending on results of required operation

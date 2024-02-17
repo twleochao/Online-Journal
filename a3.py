@@ -11,10 +11,11 @@ import socket
 from ds_client import send 
 
 def main():
-    name = 'acbdfeuhf'
+    name = 'harharhahr'
     pwd = '123456789'
-    msg = 'testing FDHSJ FHDJSK '
-    send(HOST, PORT, name, pwd, msg)
+    msg = 'first post !!!'
+    bio = 'this is my bio'
+    send(HOST, PORT, name, pwd, msg, bio)
 
 if __name__ == "__main__":
     main()
