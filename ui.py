@@ -6,7 +6,7 @@
 
 from pathlib import Path
 
-VALID_INPUT = ['L', 'Q', 'C', 'D', 'R', 'O', 'E', 'P']
+VALID_INPUT = ['L', 'Q', 'C', 'D', 'R', 'O', 'E', 'P', 'U']
 
 '''
 prints all avaliable commands
@@ -21,6 +21,7 @@ def print_commands():
     print('"O" - Loads content of specified DSU file')
     print('"E" - Edits content in DSU file loaded by C or O command')
     print('"P" - Prints specified content stored in DSU filed loaded by C or O command')
+    print('"U" - Post selected journal entry onto the DSP server')
     
 '''
 reads input from user in a user friendly manner
@@ -41,6 +42,7 @@ def read_input():
     elif lst[0] == 'O': lst = load_file(lst)
     elif lst[0] == 'E': lst = edit_file(lst)
     elif lst[0] == 'P': lst = print_file(lst)
+    elif lst[0] == 'U': return lst[0] 
 
     return lst
 
@@ -81,11 +83,12 @@ def get_commands(lst, spc = False):
 
 def get_user_info(name, path):
     print(f'Your file called {name} will soon be created at {path}!\nPlease enter the following information.\n')
+    ip = input('IP Address: (required): ')
     username = input('Username (required): ')
     password = input('Password (required): ')
-    bio = input('Biography: ')
+    bio = input('Biography: (optional)')
 
-    return username, password, bio
+    return ip, username, password, bio
 
 def list_content(lst):
     lst = get_path(lst, 'path that you want load')
@@ -141,3 +144,4 @@ def print_file(lst):
     print('-all - Print everything stored in profile.')
 
     return get_commands(lst, True)
+
