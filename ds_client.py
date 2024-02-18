@@ -59,10 +59,10 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
             DSPcmd = to_json('bio', username, password, message, bio, serv_msg.token)
             msg = get_send_msg(DSPcmd)
             write_command(send, msg)
-
-        DSPcmd = to_json('post', username, password, message, bio, serv_msg.token)
-        msg = get_send_msg(DSPcmd)
-        write_command(send, msg)
+        elif message:
+            DSPcmd = to_json('post', username, password, message, bio, serv_msg.token)
+            msg = get_send_msg(DSPcmd)
+            write_command(send, msg)
 
         return True
 
