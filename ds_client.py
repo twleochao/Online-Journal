@@ -72,6 +72,3 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     except:
         print('Error occured')
         return False
-
-#TODO: return either True or False depending on results of required operation
-

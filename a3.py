@@ -147,10 +147,10 @@ def print_content(pf, lst):
             print('Posts:')
             for post in posts:
                 print(f'{posts.index(post) + 1}: {post["entry"]}')
+            i -= 1
         elif lst[i] == '-post':
             posts = pf[1].get_posts()
             print(f'{lst[i+1]}: {posts[int(lst[i+1]) - 1]["entry"]}')
-            i -= 1
         elif lst[i] == '-all':
             print(f'Username: {pf[1].username}')
             print(f'Password: {pf[1].password}')
@@ -170,11 +170,20 @@ def post_journal(pf):
         print(f'{posts.index(post) + 1}: {post["entry"]}')
 
     idx = input('Enter the index of the journal you want to post: ')
-    while not isinstance(idx, int) and idx > len(posts) - 1 and idx < 1:
+    while not is_int(idx):
+        print('Invalid index, try again')
         idx = input('Enter the index of the journal you want to post: ')
 
-    send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, posts[int(idx) - 1]["entry"], pf[1].bio)
-    print(f'Journal#{idx}: {posts[int(idx) - 1]} has been successfully posted!') 
+    res = send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, posts[int(idx) - 1]["entry"], pf[1].bio)
+    if res: print(f'Journal#{idx}: {posts[int(idx) - 1]["entry"]} has been successfully posted!') 
+    else: print('An error has occured with uploading, please try again')
+
+def is_int(num):
+    try:
+        int(num)
+        return True
+    except ValueError:
+        return False
 
 def main():
     print('Welcome to your Personal Journal! Press enter to begin: ', end="")
