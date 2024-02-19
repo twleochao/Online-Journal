@@ -156,6 +156,7 @@ def print_content(pf, lst):
             print(f'Password: {pf[1].password}')
             print(f'Biography: {pf[1].bio}')
             posts = pf[1].get_posts()
+            print('Posts:')
             for post in posts:
                 print(f'{posts.index(post) + 1}: {post["entry"]}')
             i -= 1
@@ -164,21 +165,21 @@ def print_content(pf, lst):
             return
         i += 2
 
-def post_journal(pf):
+def post_journal(pf, idx):
     posts = pf[1].get_posts()
-    for post in posts: 
-        print(f'{posts.index(post) + 1}: {post["entry"]}')
-
-    idx = input('Enter the index of the journal you want to post, enter 0 if you just want to update your bio: ')
-    while not is_int(idx):
+    if not is_int(idx) or int(idx) < 0:
         print('Invalid index, try again')
-        idx = input('Enter the index of the journal you want to post, enter 0 if you just want to update your bio: ')
+        return
 
-    if idx == 0: res = send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, None, pf[1].bio)
-    else res = send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, posts[int(idx) - 1]["entry"], pf[1].bio)
-
-    if res: print(f'Journal#{idx}: {posts[int(idx) - 1]["entry"]} has been successfully posted!') 
-    else: print('An error has occured with uploading, please try again')
+    idx = int(idx)
+    if idx == 0: 
+        res = send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, None, pf[1].bio)
+        if res: print('Bio has been successfully updated!')
+        else: print('An error has occured')
+    else:
+        res = send(pf[1].dsuserver, PORT, pf[1].username, pf[1].password, posts[idx - 1]["entry"], pf[1].bio)
+        if res: print(f'Journal #{idx}: {posts[idx - 1]["entry"]} has been successfully posted!') 
+        else: print('An error has occured with uploading, please try again')
 
 def is_int(num):
     try:
@@ -232,13 +233,13 @@ def run(lst = [], admin = None, profile_info = None):
                 try: 
                     if cmd == 'E': edit_content(profile_info, lst[1:])
                     elif cmd == 'P': print_content(profile_info, lst[1:])
-                    else: post_journal(profile_info)
+                    else: post_journal(profile_info, lst[1])
                 except TypeError:
                     print('No profile loaded, try using the C or O commands first')
             else:
                 print('Command not found, please try again')
         except IndexError:
-            print('ERROR: missing or invalid information')
+            print('ERROR: Value out of bounds')
 
     if runagain: run(lst, admin, profile_info)
 

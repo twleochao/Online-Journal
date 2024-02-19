@@ -21,7 +21,7 @@ def print_commands():
     print('"O" - Loads content of specified DSU file')
     print('"E" - Edits content in DSU file loaded by C or O command')
     print('"P" - Prints specified content stored in DSU filed loaded by C or O command')
-    print('"U" - Post selected journal entry onto the DSP server')
+    print('"U" - Post selected journal entry or update bio on the DSP server')
     
 '''
 reads input from user in a user friendly manner
@@ -42,7 +42,7 @@ def read_input():
     elif lst[0] == 'O': lst = load_file(lst)
     elif lst[0] == 'E': lst = edit_file(lst)
     elif lst[0] == 'P': lst = print_file(lst)
-    elif lst[0] == 'U': return lst[0] 
+    elif lst[0] == 'U': lst = post_journal(lst)
 
     return lst
 
@@ -88,7 +88,7 @@ def get_user_info(name, path):
     password = input('Password (required): ')
     bio = input('Biography (optional): ')
 
-    return ip, username, password, bio
+    return edit_input([ip, username, password, bio], True)
 
 def list_content(lst):
     lst = get_path(lst, 'path that you want load')
@@ -145,3 +145,6 @@ def print_file(lst):
 
     return get_commands(lst, True)
 
+def post_journal(lst):
+    print('Enter the index of the journal you want to post.\nEnter 0 if you only want to post your updated bio:\n')
+    return get_commands(lst)

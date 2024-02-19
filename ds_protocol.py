@@ -25,7 +25,8 @@ def extract_json(json_msg:str) -> ServerMessage:
 
         cmd = json_obj['response']['type']
         msg = json_obj['response']['message']
-        tkn = json_obj['response']['token'] 
+        try: tkn = json_obj['response']['token'] 
+        except KeyError: tkn = None
     except json.JSONDecodeError:
         print("Json cannot be decoded.")
 

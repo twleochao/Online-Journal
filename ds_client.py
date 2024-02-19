@@ -38,7 +38,8 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     :param message: The message to be sent to the server.
     :param bio: Optional, a bio for the user.
     '''
-
+    print(message)
+    tkn = None
     client = create_socket(server, port)
     if client == None:
         return False
@@ -53,22 +54,30 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
         serv_msg = extract_json(response)
 
         if serv_msg.type == 'error':
+            print(serv_msg.message)
             return False
+        tkn = serv_msg.token
 
-        if bio:
-            DSPcmd = to_json('bio', username, password, message, bio, serv_msg.token)
+        if bio != None:
+            DSPcmd = to_json('bio', username, password, message, bio, tkn)
             msg = get_send_msg(DSPcmd)
             write_command(send, msg)
-        elif message:
-            DSPcmd = to_json('post', username, password, message, bio, serv_msg.token)
+            response = receive(client)
+            serv_msg = extract_json(response)
+            print(serv_msg.message)
+        if message != None:
+            DSPcmd = to_json('post', username, password, message, bio, tkn)
             msg = get_send_msg(DSPcmd)
             write_command(send, msg)
+            response = receive(client)
+            serv_msg = extract_json(response)
+            print(serv_msg.message)
 
         return True
 
     except ValueError:
         print('Missing information or invalid data type')
         return False
-    except:
-        print('Error occured')
-        return False
+    #except:
+        #print('Error occured')
+        #return False
