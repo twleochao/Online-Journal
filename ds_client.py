@@ -27,6 +27,20 @@ def write_command(send, msg):
     send.write(msg + b'\r\n')
     send.flush()
 
+def interact(send, cmd, username, password, message, bio=None, tkn=None):
+    DSPcmd = None
+    if cmd == 'join':
+        DSPcmd = to_json(cmd, username, password, message, bio)
+    else: 
+        DSPcmd = to_json(cmd, username, password, message, bio, tkn)
+
+    msg = get_send_msg(DSPcmd)
+    write_command(send, msg)
+    response = receive(client)
+    serv_msg = extract_json(response)
+    return serv_msg
+
+
 def send(server:str, port:int, username:str, password:str, message:str, bio:str=None) -> bool:
     '''
     The send function joins a ds server and sends a message, bio, or both
@@ -46,12 +60,7 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
     try:
         send = client.makefile('wb')
-        DSPcmd = to_json('join', username, password, message, bio)
-        msg = get_send_msg(DSPcmd)
-        write_command(send, msg)
-
-        response = receive(client)
-        serv_msg = extract_json(response)
+        serv_msg = interact(send, 'join', username, password, message, bio)
 
         if serv_msg.type == 'error':
             print(serv_msg.message)
@@ -59,18 +68,10 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
         tkn = serv_msg.token
 
         if bio != None:
-            DSPcmd = to_json('bio', username, password, message, bio, tkn)
-            msg = get_send_msg(DSPcmd)
-            write_command(send, msg)
-            response = receive(client)
-            serv_msg = extract_json(response)
+            serv_msg = interact(send, 'bio', username, password, message, bio, tkn)
             print(serv_msg.message)
         if message != None:
-            DSPcmd = to_json('post', username, password, message, bio, tkn)
-            msg = get_send_msg(DSPcmd)
-            write_command(send, msg)
-            response = receive(client)
-            serv_msg = extract_json(response)
+            serv_msg = interact(send, 'post', username, password, message, bio, tkn)
             print(serv_msg.message)
 
         return True
@@ -78,6 +79,6 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     except ValueError:
         print('Missing information or invalid data type')
         return False
-    #except:
-        #print('Error occured')
-        #return False
+    except:
+        print('Error occured')
+        return False
