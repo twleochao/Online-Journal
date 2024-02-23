@@ -146,5 +146,5 @@ def print_file(lst):
     return get_commands(lst, True)
 
 def post_journal(lst):
-    print('Enter the index of the journal you want to post.\nEnter 0 if you only want to post your updated bio:\n')
+    print('Enter the index of the journal you want to post.\nEnter 0 if you only want to post your updated bio:')
     return get_commands(lst)

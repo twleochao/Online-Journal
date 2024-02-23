@@ -239,7 +239,7 @@ def run(lst = [], admin = None, profile_info = None):
             else:
                 print('Command not found, please try again')
         except IndexError:
-            print('ERROR: Value out of bounds')
+            print('Error: Value out of bounds')
 
     if runagain: run(lst, admin, profile_info)
 

@@ -55,23 +55,29 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     client = create_socket(server, port)
     if client == None:
         return False
-
+    if message.strip() == "":
+        print('Can\'t post empty journal')
+        return False
     try:
         send = client.makefile('wb')
         recv = client.makefile('rb')
         serv_msg = interact(send, recv, 'join', username, password, message, bio)
 
+        print(serv_msg.message)
         if serv_msg.type == 'error':
             print(serv_msg.message)
-            return False
         tkn = serv_msg.token
 
         if bio != None:
             serv_msg = interact(send, recv, 'bio', username, password, message, bio, tkn)
             print(serv_msg.message)
+            if serv_msg.type == 'error':
+                return False
         if message != None:
             serv_msg = interact(send, recv, 'post', username, password, message, bio, tkn)
             print(serv_msg.message)
+            if serv_msg.type == 'error':
+                return False
 
         return True
 
