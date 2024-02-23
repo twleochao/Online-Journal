@@ -245,6 +245,3 @@ def run(lst = [], admin = None, profile_info = None):
 
 if __name__ == "__main__":
     main()
-    
-
-
