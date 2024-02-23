@@ -15,9 +15,8 @@ def create_socket(server:str, port:int) -> socket.socket:
     except:
         return None
 
-def receive(client:socket.socket):
+def receive(recv):
     try: 
-        recv = client.makefile('rb')
         srv_response = recv.readline()
         return srv_response
     except TypeError:
@@ -27,7 +26,7 @@ def write_command(send, msg):
     send.write(msg + b'\r\n')
     send.flush()
 
-def interact(send, cmd, username, password, message, bio=None, tkn=None):
+def interact(send, recv, cmd, username, password, message, bio=None, tkn=None):
     DSPcmd = None
     if cmd == 'join':
         DSPcmd = to_json(cmd, username, password, message, bio)
@@ -36,7 +35,7 @@ def interact(send, cmd, username, password, message, bio=None, tkn=None):
 
     msg = get_send_msg(DSPcmd)
     write_command(send, msg)
-    response = receive(client)
+    response = receive(recv)
     serv_msg = extract_json(response)
     return serv_msg
 
@@ -52,7 +51,6 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
     :param message: The message to be sent to the server.
     :param bio: Optional, a bio for the user.
     '''
-    print(message)
     tkn = None
     client = create_socket(server, port)
     if client == None:
@@ -60,7 +58,8 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
 
     try:
         send = client.makefile('wb')
-        serv_msg = interact(send, 'join', username, password, message, bio)
+        recv = client.makefile('rb')
+        serv_msg = interact(send, recv, 'join', username, password, message, bio)
 
         if serv_msg.type == 'error':
             print(serv_msg.message)
@@ -68,10 +67,10 @@ def send(server:str, port:int, username:str, password:str, message:str, bio:str=
         tkn = serv_msg.token
 
         if bio != None:
-            serv_msg = interact(send, 'bio', username, password, message, bio, tkn)
+            serv_msg = interact(send, recv, 'bio', username, password, message, bio, tkn)
             print(serv_msg.message)
         if message != None:
-            serv_msg = interact(send, 'post', username, password, message, bio, tkn)
+            serv_msg = interact(send, recv, 'post', username, password, message, bio, tkn)
             print(serv_msg.message)
 
         return True
